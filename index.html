@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Visualizer</title>
-    <!-- Correct place for CSS file -->
-    <link rel="stylesheet" href="style.css">
+    <title>Welcome to Audio visaulizer!</title>
+    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS -->
 </head>
 <body>
-    <!-- Your page content goes here -->
-    <h1>Welcome to Audio Visualizer!</h1>
+    <div id="visualizer-container">
+        <canvas id="visualizer"></canvas> <!-- Canvas for the visualizer -->
+    </div>
 
-    <!-- Correct place for JavaScript file -->
-    <script src="script.js"></script>
+    <input type="file" id="audio-file" accept="audio/*"> <!-- Audio input -->
+    
+    <script src="script.js"></script> <!-- Link to your JS -->
 </body>
 </html>
