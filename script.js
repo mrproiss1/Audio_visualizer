@@ -7,6 +7,8 @@ const blurValue = document.getElementById('blurValue');
 const background = document.getElementById('background');
 const centerImage = document.getElementById('centerImage');
 const audioVisualizer = document.getElementById('audioVisualizer');
+const startButton = document.getElementById('startButton');
+const visualizerContainer = document.getElementById('visualizer');
 
 // Audio context and visualizer setup
 let audioContext, analyser, bufferLength, dataArray;
@@ -22,39 +24,49 @@ blurInput.addEventListener('input', function() {
 });
 
 // Handle Profile Picture upload
+let profilePicFile;
 profilePicInput.addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            centerImage.style.backgroundImage = `url(${e.target.result})`;
-        };
-        reader.readAsDataURL(file);
-    }
+    profilePicFile = event.target.files[0];
 });
 
 // Handle Background Image upload
+let backgroundFile;
 backgroundInput.addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            background.style.backgroundImage = `url(${e.target.result})`;
-        };
-        reader.readAsDataURL(file);
-    }
+    backgroundFile = event.target.files[0];
 });
 
-// Handle Audio file upload and setup visualizer
+// Handle Audio file upload
+let audioFile;
 audioInput.addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const audio = new Audio(URL.createObjectURL(file));
+    audioFile = event.target.files[0];
+});
+
+// Handle Start Button click to load and start visualizer
+startButton.addEventListener('click', function() {
+    if (profilePicFile && audioFile && backgroundFile) {
+        // Display visualizer and hide the upload section
+        visualizerContainer.style.display = 'block';
+
+        // Set background image
+        const backgroundReader = new FileReader();
+        backgroundReader.onload = function(e) {
+            background.style.backgroundImage = `url(${e.target.result})`;
+        };
+        backgroundReader.readAsDataURL(backgroundFile);
+
+        // Set profile picture in center
+        const profilePicReader = new FileReader();
+        profilePicReader.onload = function(e) {
+            centerImage.style.backgroundImage = `url(${e.target.result})`;
+        };
+        profilePicReader.readAsDataURL(profilePicFile);
+
+        // Set up the audio visualizer
+        const audio = new Audio(URL.createObjectURL(audioFile));
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
-        audio.src = URL.createObjectURL(file);
+        audio.src = URL.createObjectURL(audioFile);
 
-        // Set up the audio analyzer
         audio.onplay = function() {
             const source = audioContext.createMediaElementSource(audio);
             source.connect(analyser);
@@ -69,6 +81,8 @@ audioInput.addEventListener('change', function(event) {
         };
 
         audio.play();
+    } else {
+        alert('Please upload all files: Profile Picture, Audio, and Background Image');
     }
 });
 
