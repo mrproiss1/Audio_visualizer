@@ -1,1 +1,16 @@
-body{font-family:Arial,sans-serif;text-align:center;background-color:#000;color:#fff;margin:0}h1{margin-top:20px}canvas{display:block;margin:20px auto;border:1px solid #fff}
+body {
+    background-color: #1e1e1e;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#visualizer-container {
+    margin-top: 20px;
+}
+
+canvas {
+    width: 100%;
+    height: 200px;
+    background-color: #333;
+}
