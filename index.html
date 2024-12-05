@@ -14,7 +14,7 @@
         <div class="upload-container">
             <h3>Upload Profile Picture</h3>
             <input type="file" id="profilePicInput" accept="image/*">
-            
+
             <h3>Upload Audio</h3>
             <input type="file" id="audioInput" accept="audio/*">
 
@@ -24,10 +24,23 @@
             <h3>Background Blur</h3>
             <input type="range" id="blurInput" min="0" max="20" step="1" value="0">
             <span id="blurValue">0px</span>
+
+            <h3>Profile Picture Size</h3>
+            <input type="range" id="profilePicSize" min="50" max="300" step="10" value="100">
+            <span id="profilePicSizeValue">100px</span>
+        </div>
+
+        <!-- Preview -->
+        <div id="previewContainer">
+            <h3>Preview</h3>
+            <div id="preview"></div>
         </div>
 
         <!-- Start Button -->
         <button id="startButton">Start Visualizer</button>
+        <button id="pauseButton" style="display:none;">Pause</button>
+        <button id="unpauseButton" style="display:none;">Unpause</button>
+        <button id="downloadButton" style="display:none;">Download</button>
 
         <!-- Visualizer and image preview -->
         <div class="visualizer" id="visualizer">
