@@ -39,6 +39,8 @@ function visualize() {
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
+    const frames = [];  // To store the frames as images
+
     function draw() {
         analyser.getByteFrequencyData(dataArray);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -54,8 +56,24 @@ function visualize() {
             x += barWidth + 1;
         }
 
-        requestAnimationFrame(draw);
+        // Capture the canvas as an image every frame
+        const imageData = canvas.toDataURL("image/png");
+        frames.push(imageData);
+
+        if (audioContext.state === 'running') {
+            requestAnimationFrame(draw);
+        } else {
+            // Audio finished, generate video from frames (can use FFmpeg)
+            generateVideoFromFrames(frames);
+        }
     }
 
     draw();
+}
+
+function generateVideoFromFrames(frames) {
+    // Here you can implement logic to send frames to a server or 
+    // generate the video using tools like FFmpeg (not possible in the browser)
+    console.log("Frames captured:", frames);
+    alert("Video rendering is not supported in browser. Use FFmpeg to combine images.");
 }
