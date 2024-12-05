@@ -104,22 +104,21 @@ startButton.addEventListener('click', function () {
             bufferLength = analyser.frequencyBinCount;
             dataArray = new Uint8Array(bufferLength);
 
-            // Start visualizing the audio
+            audio.play();
             drawVisualizer();
         };
 
+        // Start audio
         audio.play();
     } else {
         alert('Please upload all files: Profile Picture, Audio, and Background Image');
     }
 });
 
-// Function to draw the audio visualizer
+// Draw the audio visualizer
 function drawVisualizer() {
     requestAnimationFrame(drawVisualizer);
-
     analyser.getByteFrequencyData(dataArray);
-
     canvasCtx.clearRect(0, 0, audioVisualizer.width, audioVisualizer.height);
 
     const barWidth = audioVisualizer.width / bufferLength;
@@ -128,15 +127,13 @@ function drawVisualizer() {
 
     for (let i = 0; i < bufferLength; i++) {
         barHeight = dataArray[i];
-
         canvasCtx.fillStyle = 'rgba(0, 255, 0, 0.7)';
         canvasCtx.fillRect(x, audioVisualizer.height - barHeight, barWidth, barHeight);
-
         x += barWidth + 1;
     }
 }
 
-// Pause audio
+// Pause/Unpause buttons
 pauseButton.addEventListener('click', function () {
     audio.pause();
     isPaused = true;
@@ -144,7 +141,6 @@ pauseButton.addEventListener('click', function () {
     unpauseButton.style.display = 'inline-block';
 });
 
-// Unpause audio
 unpauseButton.addEventListener('click', function () {
     audio.play();
     isPaused = false;
@@ -152,7 +148,7 @@ unpauseButton.addEventListener('click', function () {
     pauseButton.style.display = 'inline-block';
 });
 
-// Download option (currently disabled in this snippet)
+// Placeholder for the download button (you need to implement the download functionality separately)
 downloadButton.addEventListener('click', function () {
     alert('Download option not implemented yet.');
 });
