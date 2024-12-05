@@ -4,20 +4,27 @@ const audioInput = document.getElementById('audioInput');
 const backgroundInput = document.getElementById('backgroundInput');
 const blurInput = document.getElementById('blurInput');
 const blurValue = document.getElementById('blurValue');
+const profilePicSize = document.getElementById('profilePicSize');
+const profilePicSizeValue = document.getElementById('profilePicSizeValue');
 const background = document.getElementById('background');
 const centerImage = document.getElementById('centerImage');
 const audioVisualizer = document.getElementById('audioVisualizer');
 const startButton = document.getElementById('startButton');
-const visualizerContainer = document.getElementById('visualizer');
+const pauseButton = document.getElementById('pauseButton');
+const unpauseButton = document.getElementById('unpauseButton');
+const downloadButton = document.getElementById('downloadButton');
+const previewContainer = document.getElementById('previewContainer');
+const preview = document.getElementById('preview');
 
 // Audio context and visualizer setup
-let audioContext, analyser, bufferLength, dataArray;
+let audioContext, analyser, bufferLength, dataArray, audio;
+let audioSource, isPaused = false;
 
 // Set up the canvas context
 const canvasCtx = audioVisualizer.getContext('2d');
 
 // Update the blur value as the slider changes
-blurInput.addEventListener('input', function() {
+blurInput.addEventListener('input', function () {
     const blurAmount = blurInput.value;
     blurValue.textContent = `${blurAmount}px`;
     background.style.filter = `blur(${blurAmount}px)`;
@@ -25,51 +32,72 @@ blurInput.addEventListener('input', function() {
 
 // Handle Profile Picture upload
 let profilePicFile;
-profilePicInput.addEventListener('change', function(event) {
+profilePicInput.addEventListener('change', function (event) {
     profilePicFile = event.target.files[0];
+    // Preview the profile picture
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        preview.innerHTML = `<img src="${e.target.result}" alt="Profile Picture">`;
+    };
+    reader.readAsDataURL(profilePicFile);
 });
 
 // Handle Background Image upload
 let backgroundFile;
-backgroundInput.addEventListener('change', function(event) {
+backgroundInput.addEventListener('change', function (event) {
     backgroundFile = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        background.style.backgroundImage = `url(${e.target.result})`;
+    };
+    reader.readAsDataURL(backgroundFile);
 });
 
 // Handle Audio file upload
 let audioFile;
-audioInput.addEventListener('change', function(event) {
+audioInput.addEventListener('change', function (event) {
     audioFile = event.target.files[0];
 });
 
+// Handle Profile Picture Size change
+profilePicSize.addEventListener('input', function () {
+    const size = profilePicSize.value;
+    profilePicSizeValue.textContent = `${size}px`;
+    centerImage.style.width = `${size}px`;
+    centerImage.style.height = `${size}px`;
+});
+
 // Handle Start Button click to load and start visualizer
-startButton.addEventListener('click', function() {
+startButton.addEventListener('click', function () {
     if (profilePicFile && audioFile && backgroundFile) {
         // Display visualizer and hide the upload section
-        visualizerContainer.style.display = 'block';
+        previewContainer.style.display = 'none';
+        document.querySelector('.upload-container').style.display = 'none';
+        document.querySelector('.visualizer').style.display = 'block';
 
         // Set background image
         const backgroundReader = new FileReader();
-        backgroundReader.onload = function(e) {
+        backgroundReader.onload = function (e) {
             background.style.backgroundImage = `url(${e.target.result})`;
         };
         backgroundReader.readAsDataURL(backgroundFile);
 
         // Set profile picture in center
         const profilePicReader = new FileReader();
-        profilePicReader.onload = function(e) {
+        profilePicReader.onload = function (e) {
             centerImage.style.backgroundImage = `url(${e.target.result})`;
         };
         profilePicReader.readAsDataURL(profilePicFile);
 
         // Set up the audio visualizer
-        const audio = new Audio(URL.createObjectURL(audioFile));
+        audio = new Audio(URL.createObjectURL(audioFile));
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
         audio.src = URL.createObjectURL(audioFile);
 
-        audio.onplay = function() {
-            const source = audioContext.createMediaElementSource(audio);
-            source.connect(analyser);
+        audio.onplay = function () {
+            audioSource = audioContext.createMediaElementSource(audio);
+            audioSource.connect(analyser);
             analyser.connect(audioContext.destination);
 
             analyser.fftSize = 256;
@@ -107,3 +135,24 @@ function drawVisualizer() {
         x += barWidth + 1;
     }
 }
+
+// Pause audio
+pauseButton.addEventListener('click', function () {
+    audio.pause();
+    isPaused = true;
+    pauseButton.style.display = 'none';
+    unpauseButton.style.display = 'inline-block';
+});
+
+// Unpause audio
+unpauseButton.addEventListener('click', function () {
+    audio.play();
+    isPaused = false;
+    unpauseButton.style.display = 'none';
+    pauseButton.style.display = 'inline-block';
+});
+
+// Download option (currently disabled in this snippet)
+downloadButton.addEventListener('click', function () {
+    alert('Download option not implemented yet.');
+});
