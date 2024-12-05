@@ -7,11 +7,32 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="visualizer-container">
-        <canvas id="visualizer"></canvas> <!-- Canvas for the visualizer -->
-    </div>
 
-    <input type="file" id="audio-file" accept="audio/*"> <!-- Audio input -->
+    <!-- Container for the visualizer -->
+    <div class="visualizer-container">
+        <!-- Upload options -->
+        <div class="upload-container">
+            <h3>Upload Profile Picture</h3>
+            <input type="file" id="profilePicInput" accept="image/*">
+            
+            <h3>Upload Audio</h3>
+            <input type="file" id="audioInput" accept="audio/*">
+
+            <h3>Upload Background Image</h3>
+            <input type="file" id="backgroundInput" accept="image/*">
+
+            <h3>Background Blur</h3>
+            <input type="range" id="blurInput" min="0" max="20" step="1" value="0">
+            <span id="blurValue">0px</span>
+        </div>
+
+        <!-- Visualizer and image preview -->
+        <div class="visualizer">
+            <div class="background" id="background"></div>
+            <div class="center-image" id="centerImage"></div>
+            <canvas id="audioVisualizer"></canvas>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
